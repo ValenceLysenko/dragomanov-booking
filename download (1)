@@ -1,0 +1,8 @@
+node_modules
+.git
+.idea
+.agents
+tmp
+seo_report_render
+start_site.log
+SEO_Report_Kimnata.docx

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kimnata - сервіс бронювання конференц-залів, переговорних кімнат та офісів для зустрічей, презентацій і командної роботи.">
+    <meta name="keywords" content="бронювання конференц-залів, оренда офісу, переговорна кімната, Kimnata, робочий простір">
+    <meta name="author" content="Лисенко Максим, 41ІСТ">
+    <title>Kimnata - бронювання конференц-залів, офісів та переговорних</title>
+    <link rel="stylesheet" href="Styles.css">
+</head>
+<body class="auth-pending">
+    <section class="auth-screen" id="auth" aria-label="Реєстрація та вхід">
+        <div class="auth-card">
+            <a class="logo auth-logo" href="#home" aria-label="Kimnata головна">
+                <span class="logo-mark">K</span>
+                <span>
+                    <strong>Kimnata</strong>
+                    <small>Вхід до сервісу</small>
+                </span>
+            </a>
+            <div class="auth-tabs" role="tablist" aria-label="Вибір форми">
+                <button class="auth-tab active" type="button" data-auth-mode="login">Вхід</button>
+                <button class="auth-tab" type="button" data-auth-mode="register">Реєстрація</button>
+            </div>
+            <form class="auth-form" id="login-form">
+                <label>
+                    Email
+                    <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+                </label>
+                <label>
+                    Пароль
+                    <input type="password" name="password" placeholder="Мінімум 6 символів" autocomplete="current-password" required>
+                </label>
+                <button class="button primary" type="submit">Увійти</button>
+            </form>
+            <form class="auth-form hidden" id="register-form">
+                <label>
+                    Ім'я
+                    <input type="text" name="name" placeholder="Ваше ім'я" autocomplete="name" required>
+                </label>
+                <label>
+                    Email
+                    <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+                </label>
+                <label>
+                    Пароль
+                    <input type="password" name="password" placeholder="Мінімум 6 символів" autocomplete="new-password" required>
+                </label>
+                <button class="button primary" type="submit">Зареєструватися</button>
+            </form>
+            <p class="auth-status" aria-live="polite"></p>
+        </div>
+    </section>
+    <header class="site-header">
+        <nav class="nav">
+            <a class="logo" href="#home" aria-label="Kimnata головна">
+                <span class="logo-mark">K</span>
+                <span>
+                    <strong>Kimnata</strong>
+                    <small>зали та офіси</small>
+                </span>
+            </a>
+
+            <button class="menu-toggle" type="button" aria-label="Відкрити меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-links">
+                <a href="#catalog">Простори</a>
+                <a href="#booking">Бронювання</a>
+                <a href="#my-bookings">Мої бронювання</a>
+                <a class="admin-link hidden" href="#admin">Адмін</a>
+                <a href="#reviews">Відгуки</a>
+                <a href="#faq">Питання</a>
+                <a href="#contacts">Контакти</a>
+                <button class="logout-button" type="button">Вийти</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero section" id="home">
+            <div class="hero-content">
+                <p class="eyebrow">БРОНЮВАННЯ РОБОЧИХ ПРОСТОРІВ</p>
+                <h1>Kimnata: конференц-зали, переговорні та офіси на потрібний час</h1>
+                <p class="hero-text">
+                    Обирайте простір для зустрічі, презентації, навчання або командної роботи.
+                    Мінімалістичний сервіс без зайвих кроків: фільтр, бронь, підтвердження.
+                </p>
+                <div class="hero-actions">
+                    <a class="button primary" href="#catalog">Переглянути простори</a>
+                    <a class="button ghost" href="#booking">Забронювати зал</a>
+                </div>
+                <ul class="hero-list">
+                    <li>Фільтри за типом простору</li>
+                    <li>Розрахунок вартості бронювання</li>
+                    <li>Зали з Wi-Fi, екраном та зоною очікування</li>
+                </ul>
+                <div class="home-dashboard" aria-label="Основні розділи">
+                    <a href="#catalog">
+                        <span>01</span>
+                        <strong>Каталог залів</strong>
+                        <small>Перегляд усіх доступних приміщень.</small>
+                    </a>
+                    <a href="#booking">
+                        <span>02</span>
+                        <strong>Бронювання</strong>
+                        <small>Форма, карта адрес та календар зайнятості.</small>
+                    </a>
+                    <a href="#my-bookings">
+                        <span>03</span>
+                        <strong>Мої броні</strong>
+                        <small>Власні заявки, статуси і QR-підтвердження.</small>
+                    </a>
+                    <a class="admin-shortcut hidden" href="#admin">
+                        <span>04</span>
+                        <strong>Адмін-панель</strong>
+                        <small>Заявки, користувачі і модерація.</small>
+                    </a>
+                </div>
+            </div>
+
+            <aside class="hero-panel" aria-label="Статистика сервісу">
+                <div>
+                    <strong>18</strong>
+                    <span>просторів доступні для бронювання</span>
+                </div>
+                <div>
+                    <strong>4.9/5</strong>
+                    <span>середня оцінка клієнтів</span>
+                </div>
+                <div>
+                    <strong>15 хв</strong>
+                    <span>середній час підтвердження</span>
+                </div>
+                <div class="accent-note">
+                    <strong>Пропозиція тижня</strong>
+                    <span>Аудиторія 101 доступна для лекцій, захистів і консультацій.</span>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section benefits" aria-label="Переваги">
+            <p class="eyebrow">ЧОМУ ОБИРАЮТЬ KIMNATA</p>
+            <h2>Зручний спосіб знайти місце для роботи чи події</h2>
+            <div class="benefit-grid">
+                <article>
+                    <h3>Простий вибір</h3>
+                    <p>Переговорна, конференц-зал або офіс підбираються через зрозумілі фільтри.</p>
+                </article>
+                <article>
+                    <h3>Все необхідне</h3>
+                    <p>У просторах є інтернет, екран, маркерна дошка, вода та базова техніка.</p>
+                </article>
+                <article>
+                    <h3>Швидка бронь</h3>
+                    <p>Додайте простір до бронювання, оберіть дату та дочекайтесь підтвердження.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section catalog-section" id="catalog">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">ДОСТУПНІ ПРОСТОРИ</p>
+                    <h2>Конференц-зали, офіси та переговорні</h2>
+                </div>
+                <span class="pill">Темний мінімалізм</span>
+            </div>
+
+            <div class="catalog-layout">
+                <div class="catalog-main">
+                    <div class="filters" aria-label="Фільтри просторів">
+                        <button class="filter active" type="button" data-filter="all">Усі приміщення</button>
+                        <button class="filter" type="button" data-filter="auditorium">Аудиторії</button>
+                        <button class="filter" type="button" data-filter="computer">Комп'ютерні</button>
+                        <button class="filter" type="button" data-filter="hall">Зали</button>
+                    </div>
+                    <input class="search" type="search" placeholder="Пошук за назвою, типом або місткістю">
+
+                    <div class="product-grid">
+                        <article class="product-card" data-category="auditorium" data-name="Аудиторія 101 1 поверх лекційна Драгоманова">
+                            <span>1 поверх · каб. 101</span>
+                            <h3>Аудиторія 101</h3>
+                            <p>Лекційна аудиторія у корпусі НПУ ім. М. П. Драгоманова для занять, захистів і презентацій.</p>
+                            <div class="product-bottom">
+                                <strong>40 місць</strong>
+                                <button type="button" data-product="Аудиторія 101" data-price="0">Обрати</button>
+                            </div>
+                        </article>
+                        <article class="product-card" data-category="computer" data-name="Кабінет 214 2 поверх комп'ютерний клас Драгоманова">
+                            <span>2 поверх · каб. 214</span>
+                            <h3>Кабінет 214</h3>
+                            <p>Комп'ютерний клас для практичних робіт, тестувань і лабораторних занять.</p>
+                            <div class="product-bottom">
+                                <strong>24 місця</strong>
+                                <button type="button" data-product="Кабінет 214" data-price="0">Обрати</button>
+                            </div>
+                        </article>
+                        <article class="product-card" data-category="hall" data-name="Зала 305 3 поверх конференц-зала Драгоманова">
+                            <span>3 поверх · зала 305</span>
+                            <h3>Зала 305</h3>
+                            <p>Просторий зал кафедри для нарад, методичних семінарів і засідань комісій.</p>
+                            <div class="product-bottom">
+                                <strong>18 місць</strong>
+                                <button type="button" data-product="Зала 305" data-price="0">Обрати</button>
+                            </div>
+                        </article>
+                        <article class="product-card" data-category="hall" data-name="Коворкінг 2 поверх студентська зона Драгоманова">
+                            <span>2 поверх · студентська зона</span>
+                            <h3>Коворкінг</h3>
+                            <p>Відкрита зона для групової роботи, консультацій і підготовки перед заняттями.</p>
+                            <div class="product-bottom">
+                                <strong>30 місць</strong>
+                                <button type="button" data-product="Коворкінг" data-price="0">Обрати</button>
+                            </div>
+                        </article>
+                        <article class="product-card" data-category="hall" data-name="Актова зала 408 4 поверх Драгоманова">
+                            <span>4 поверх · зала 408</span>
+                            <h3>Актова зала 408</h3>
+                            <p>Великий зал для конференцій, відкритих лекцій і захистів дипломних робіт.</p>
+                            <div class="product-bottom">
+                                <strong>60 місць</strong>
+                                <button type="button" data-product="Актова зала 408" data-price="0">Обрати</button>
+                            </div>
+                        </article>
+                        <article class="product-card" data-category="auditorium" data-name="Методичний кабінет 116 1 поверх Драгоманова">
+                            <span>1 поверх · каб. 116</span>
+                            <h3>Методичний кабінет 116</h3>
+                            <p>Невеликий кабінет для консультацій, роботи викладача і зустрічей з малими групами.</p>
+                            <div class="product-bottom">
+                                <strong>12 місць</strong>
+                                <button type="button" data-product="Методичний кабінет 116" data-price="0">Обрати</button>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <aside class="cart" aria-label="Бронювання">
+                    <h3>Бронювання</h3>
+                    <p>Додайте простір, щоб побачити орієнтовну вартість за 1 годину.</p>
+                    <ul class="cart-list"></ul>
+                    <div class="cart-total">
+                        <span>Разом:</span>
+                        <strong><span id="total">0</span> грн/год</strong>
+                    </div>
+                    <button class="checkout" type="button">Оформити бронь</button>
+                    <small class="cart-message">Список бронювання поки порожній.</small>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section booking-section" id="booking">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">БРОНЮВАННЯ ПРИМІЩЕНЬ</p>
+                    <h2>Оберіть кабінет або зал, дату та перевірте зайнятість у календарі</h2>
+                </div>
+                <span class="pill">Карта і календар</span>
+            </div>
+
+            <div class="booking-layout">
+                <div class="booking-tools">
+                    <form class="booking-form">
+                        <label>
+                            Приміщення
+                            <select name="room" class="booking-room" required>
+                                <option value="Аудиторія 101">Аудиторія 101 - 1 поверх, каб. 101</option>
+                                <option value="Кабінет 214">Кабінет 214 - 2 поверх, каб. 214</option>
+                                <option value="Зала 305">Зала 305 - 3 поверх, зала 305</option>
+                                <option value="Коворкінг">Коворкінг - 2 поверх, студентська зона</option>
+                                <option value="Актова зала 408">Актова зала 408 - 4 поверх, зала 408</option>
+                                <option value="Методичний кабінет 116">Методичний кабінет 116 - 1 поверх, каб. 116</option>
+                            </select>
+                        </label>
+                        <label>
+                            Назва події
+                            <input type="text" name="title" placeholder="Наприклад: захист проєкту або лекція" required>
+                        </label>
+                        <div class="booking-row">
+                            <label>
+                                Дата
+                                <input type="date" name="date" class="booking-date" required>
+                            </label>
+                            <label>
+                                Початок
+                                <input type="time" name="start" class="booking-time" required>
+                            </label>
+                            <label>
+                                Завершення
+                                <input type="time" name="end" class="booking-end" required>
+                            </label>
+                        </div>
+                        <label>
+                            Телефон
+                            <input type="tel" name="phone" placeholder="+380..." required>
+                        </label>
+                        <label>
+                            Коментар
+                            <textarea name="comment" placeholder="Кількість гостей або додаткове обладнання"></textarea>
+                        </label>
+                        <button class="button primary" type="submit">Забронювати приміщення</button>
+                        <p class="booking-status" aria-live="polite"></p>
+                    </form>
+
+                    <div class="venue-list" aria-label="Кабінети та зали корпусу"></div>
+                </div>
+
+                <div class="map-panel" aria-label="План корпусу НПУ ім. М. П. Драгоманова">
+                    <div class="map-canvas">
+                        <div class="building-title">
+                            <span>НПУ ім. М. П. Драгоманова</span>
+                            <strong>Навчальний корпус · план приміщень</strong>
+                        </div>
+                        <div class="floor-stack" aria-hidden="true">
+                            <span>4 поверх</span>
+                            <span>3 поверх</span>
+                            <span>2 поверх</span>
+                            <span>1 поверх</span>
+                        </div>
+                        <div class="floor-plan">
+                            <div class="floor-band floor-4">4</div>
+                            <div class="floor-band floor-3">3</div>
+                            <div class="floor-band floor-2">2</div>
+                            <div class="floor-band floor-1">1</div>
+                            <div class="main-corridor"></div>
+                            <div class="stair-core stair-left">Сходи</div>
+                            <div class="stair-core stair-right">Ліфт</div>
+                            <button class="map-space active space-row-1 space-left" type="button" data-map-room="Аудиторія 101">
+                                <strong>101</strong>
+                                <span>Аудиторія</span>
+                            </button>
+                            <button class="map-space space-row-1 space-right" type="button" data-map-room="Методичний кабінет 116">
+                                <strong>116</strong>
+                                <span>Методичний</span>
+                            </button>
+                            <button class="map-space space-row-2 space-left" type="button" data-map-room="Кабінет 214">
+                                <strong>214</strong>
+                                <span>Комп'ютерний</span>
+                            </button>
+                            <button class="map-space wide space-row-2 space-wide-right" type="button" data-map-room="Коворкінг">
+                                <strong>2F</strong>
+                                <span>Коворкінг</span>
+                            </button>
+                            <button class="map-space space-row-3 space-left" type="button" data-map-room="Зала 305">
+                                <strong>305</strong>
+                                <span>Зала</span>
+                            </button>
+                            <button class="map-space wide space-row-4 space-wide-right" type="button" data-map-room="Актова зала 408">
+                                <strong>408</strong>
+                                <span>Актова зала</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="map-info">
+                        <img class="map-photo" src="assets/dragomanov-a101.png" alt="Фото обраного приміщення НПУ ім. М. П. Драгоманова">
+                        <div class="map-details">
+                            <strong class="map-title">Аудиторія 101</strong>
+                            <span class="map-address">1 поверх · каб. 101 · 40 місць</span>
+                            <p class="map-description">Лекційна аудиторія у навчальному корпусі.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calendar-panel">
+                <div class="calendar-head">
+                    <button class="calendar-nav" type="button" data-calendar-step="-1" aria-label="Попередній місяць">&lt;</button>
+                    <h3 class="calendar-title"></h3>
+                    <button class="calendar-nav" type="button" data-calendar-step="1" aria-label="Наступний місяць">&gt;</button>
+                </div>
+                <div class="calendar-weekdays" aria-hidden="true">
+                    <span>Пн</span>
+                    <span>Вт</span>
+                    <span>Ср</span>
+                    <span>Чт</span>
+                    <span>Пт</span>
+                    <span>Сб</span>
+                    <span>Нд</span>
+                </div>
+                <div class="booking-calendar" aria-label="Календар заброньованих приміщень"></div>
+            </div>
+        </section>
+
+        <section class="section account-section" id="my-bookings">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">ОСОБИСТИЙ КАБІНЕТ</p>
+                    <h2>Мої бронювання та QR-підтвердження</h2>
+                </div>
+                <span class="pill my-bookings-count">0 записів</span>
+            </div>
+            <div class="account-summary">
+                <article>
+                    <strong class="summary-active">0</strong>
+                    <span>активні бронювання</span>
+                </article>
+                <article>
+                    <strong class="summary-cancelled">0</strong>
+                    <span>скасовані записи</span>
+                </article>
+                <article>
+                    <strong class="summary-user-role">user</strong>
+                    <span>роль користувача</span>
+                </article>
+            </div>
+            <div class="my-bookings-list"></div>
+        </section>
+
+        <section class="section admin-section hidden" id="admin">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">АДМІНІСТРУВАННЯ</p>
+                    <h2>Керування користувачами, приміщеннями та бронюваннями</h2>
+                </div>
+                <span class="pill">Ролі і контроль</span>
+            </div>
+            <div class="admin-stats"></div>
+            <div class="admin-workspace">
+                <div>
+                    <h3>Заявки на бронювання</h3>
+                    <div class="admin-table"></div>
+                </div>
+                <form class="admin-booking-form">
+                    <h3>Додати бронь від адміністратора</h3>
+                    <label>
+                        Приміщення
+                        <select name="room" class="admin-booking-room" required></select>
+                    </label>
+                    <label>
+                        Назва події
+                        <input type="text" name="title" placeholder="Назва події" required>
+                    </label>
+                    <div class="booking-row">
+                        <label>
+                            Дата
+                            <input type="date" name="date" class="admin-booking-date" required>
+                        </label>
+                        <label>
+                            Початок
+                            <input type="time" name="start" class="admin-booking-start" required>
+                        </label>
+                        <label>
+                            Завершення
+                            <input type="time" name="end" class="admin-booking-end" required>
+                        </label>
+                    </div>
+                    <label>
+                        Телефон
+                        <input type="tel" name="phone" placeholder="+380..." required>
+                    </label>
+                    <label>
+                        Коментар
+                        <textarea name="comment" placeholder="Службова примітка"></textarea>
+                    </label>
+                    <button class="button primary" type="submit">Додати бронь</button>
+                    <p class="admin-booking-status" aria-live="polite"></p>
+                </form>
+                <div>
+                    <h3>Користувачі</h3>
+                    <div class="admin-users"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reviews" id="reviews">
+            <p class="eyebrow">ВІДГУКИ КЛІЄНТІВ</p>
+            <h2>Що кажуть команди</h2>
+            <div class="review-card">
+                <p class="review-text">"Обирали аудиторію 101 для захисту проєкту. На плані швидко знайшли поверх, кабінет і фото приміщення."</p>
+                <strong>Марина, Київ</strong>
+                <div class="review-controls">
+                    <button type="button" class="prev-review" aria-label="Попередній відгук">&lt;</button>
+                    <button type="button" class="next-review" aria-label="Наступний відгук">&gt;</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section faq" id="faq">
+            <p class="eyebrow">ПИТАННЯ ТА ВІДПОВІДІ</p>
+            <h2>Поширені питання</h2>
+            <div class="faq-list">
+                <details open>
+                    <summary>Як підтверджується бронювання?</summary>
+                    <p>Після заявки менеджер перевіряє доступність простору та надсилає підтвердження.</p>
+                </details>
+                <details>
+                    <summary>Чи можна змінити час бронювання?</summary>
+                    <p>Так, якщо простір вільний у новий час. Краще повідомити мінімум за 3 години.</p>
+                </details>
+                <details>
+                    <summary>Що входить у вартість?</summary>
+                    <p>Базово входять Wi-Fi, столи, крісла, світло, вода та доступ до заброньованого простору.</p>
+                </details>
+            </div>
+        </section>
+
+        <section class="section contacts" id="contacts">
+            <p class="eyebrow">КОНТАКТИ</p>
+            <h2>Зв'яжіться з Kimnata зручним способом</h2>
+            <div class="contact-grid">
+                <article>
+                    <h3>Адміністрація</h3>
+                    <p><strong>Телефон:</strong> +380 (44) 555-41-41</p>
+                    <p><strong>Email:</strong> booking@kimnata.ua</p>
+                    <p><strong>Графік:</strong> щодня 08:00-22:00</p>
+                </article>
+                <article>
+                    <h3>Підтримка броні</h3>
+                    <p><strong>Термінові звернення:</strong> 24/7</p>
+                    <p><strong>Час відповіді:</strong> до 15 хвилин</p>
+                    <p><strong>Оплата:</strong> картка, Apple Pay, Google Pay</p>
+                </article>
+                <article>
+                    <h3>Локація</h3>
+                    <p>м. Київ, вул. Ділова, 12</p>
+                    <p>Вхід після підтвердження бронювання на рецепції.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Kimnata. Бронювання конференц-залів, офісів та переговорних.</p>
+        <div>
+            <a href="#home">Нагору</a>
+            <a href="#catalog">Простори</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
