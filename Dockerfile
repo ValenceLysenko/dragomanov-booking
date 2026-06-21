@@ -1,50 +1,16 @@
-# Deploy Online
+FROM node:22-alpine
 
-This project needs Node.js hosting because login, bookings, admin panel, and JSON storage are served by `server.js`.
+WORKDIR /app
 
-## Fast Option: Render
+COPY package.json ./
+RUN npm install --omit=dev
 
-1. Push this folder to GitHub.
-2. Open https://render.com and create a new Web Service.
-3. Connect the GitHub repository.
-4. Render will detect `render.yaml`.
-5. Deploy.
-6. Open the generated Render URL.
+COPY . .
 
-The app runs with:
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV DATA_DIR=/app/data
 
-```bash
-npm start
-```
+EXPOSE 3000
 
-Health check:
-
-```text
-/healthz
-```
-
-## Data Storage
-
-By default, data is stored in:
-
-```text
-data/users.json
-data/bookings.json
-```
-
-For a server with persistent storage, set:
-
-```text
-DATA_DIR=/path/to/persistent/data
-```
-
-On free hosting, file data can be reset after redeploys or restarts. For production, use a persistent disk, VPS, or replace JSON files with a database.
-
-## Admin Login
-
-The default admin is created automatically on first start:
-
-```text
-Email: admin@kimnata.local
-Password: Admin123!
-```
+CMD ["npm", "start"]
