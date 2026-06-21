@@ -1,11 +1,5 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const navLinks = document.querySelector(".nav-links");
-const filters = document.querySelectorAll(".filter");
-const products = document.querySelectorAll(".product-card");
-const searchInput = document.querySelector(".search");
-const cartList = document.querySelector(".cart-list");
-const totalElement = document.querySelector("#total");
-const cartMessage = document.querySelector(".cart-message");
 const reviewText = document.querySelector(".review-text");
 const reviewAuthor = document.querySelector(".review-card strong");
 const authTabs = document.querySelectorAll(".auth-tab");
@@ -49,8 +43,6 @@ const adminBookingEnd = document.querySelector(".admin-booking-end");
 const adminBookingStatus = document.querySelector(".admin-booking-status");
 const apiBase = window.location.protocol === "file:" ? "http://localhost:3000" : "";
 
-let activeFilter = "all";
-let total = 0;
 let reviewIndex = 0;
 let bookings = [];
 let myBookings = [];
@@ -673,56 +665,6 @@ document.querySelectorAll(".nav-links a").forEach((link) => {
 });
 
 window.addEventListener("hashchange", updateRoute);
-
-function updateProducts() {
-    const query = searchInput.value.trim().toLowerCase();
-
-    products.forEach((product) => {
-        const matchesFilter = activeFilter === "all" || product.dataset.category === activeFilter;
-        const matchesSearch = product.dataset.name.toLowerCase().includes(query);
-        product.classList.toggle("hidden", !matchesFilter || !matchesSearch);
-    });
-}
-
-filters.forEach((filter) => {
-    filter.addEventListener("click", () => {
-        filters.forEach((button) => button.classList.remove("active"));
-        filter.classList.add("active");
-        activeFilter = filter.dataset.filter;
-        updateProducts();
-    });
-});
-
-searchInput.addEventListener("input", updateProducts);
-
-document.querySelectorAll("[data-product]").forEach((button) => {
-    button.addEventListener("click", () => {
-        const name = button.dataset.product;
-        const price = Number(button.dataset.price);
-        const item = document.createElement("li");
-
-        item.innerHTML = `<span>${name}</span><strong>${price.toLocaleString("uk-UA")} грн/год</strong>`;
-        cartList.append(item);
-
-        total += price;
-        totalElement.textContent = total.toLocaleString("uk-UA");
-        cartMessage.textContent = "Простір додано до бронювання.";
-
-        if (rooms.some((room) => room.name === name)) {
-            selectRoom(name);
-        }
-    });
-});
-
-document.querySelector(".checkout").addEventListener("click", () => {
-    if (cartList.children.length > 0) {
-        cartMessage.textContent = "Перейдіть до форми бронювання та оберіть дату.";
-        window.location.hash = "booking";
-        return;
-    }
-
-    cartMessage.textContent = "Спочатку додайте простір до бронювання.";
-});
 
 bookingForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
