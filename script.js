@@ -282,15 +282,6 @@ function getRoom(name) {
     return rooms.find((room) => room.name === name) || fallbackRooms.find((room) => room.name === name) || rooms[0] || fallbackRooms[0];
 }
 
-function roomMapUrl(room) {
-    if (room.coords && Number.isFinite(room.coords.lat) && Number.isFinite(room.coords.lng)) {
-        return `https://maps.google.com/?q=${room.coords.lat},${room.coords.lng}`;
-    }
-
-    const query = `${room.name}, ${room.address}`;
-    return `https://maps.google.com/?q=${encodeURIComponent(query)}`;
-}
-
 function renderRoomSelect() {
     if (!bookingRoom) {
         return;
@@ -409,13 +400,14 @@ function renderCalendar() {
 }
 
 function qrMarkup(room, token) {
-    const mapUrl = roomMapUrl(room);
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=10&data=${encodeURIComponent(mapUrl)}`;
+    const baseUrl = apiBase || window.location.origin;
+    const checkinUrl = `${baseUrl}/checkin?token=${encodeURIComponent(token)}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=10&data=${encodeURIComponent(checkinUrl)}`;
 
     return `
-        <a class="qr-box" href="${mapUrl}" target="_blank" rel="noopener" title="Відкрити ${room.name} на Google Maps">
-            <img src="${qrUrl}" alt="QR-код Google Maps для ${room.name}" loading="lazy">
-            <span>Google Maps</span>
+        <a class="qr-box" href="${checkinUrl}" title="Підтвердити вхід до ${room.name}">
+            <img src="${qrUrl}" alt="QR-код підтвердження входу до ${room.name}" loading="lazy">
+            <span>Вхід до кабінету</span>
         </a>
     `;
 }

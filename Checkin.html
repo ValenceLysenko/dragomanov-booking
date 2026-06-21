@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Підтвердження входу</title>
+    <style>
+        :root {
+            --bg: #111111;
+            --panel: #202020;
+            --line: #343434;
+            --text: #f4f1e8;
+            --muted: #b9b3a7;
+            --yellow: #f4c542;
+            --success: #9bde7e;
+            --danger: #ff8b8b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            margin: 0;
+            padding: 24px;
+            background:
+                linear-gradient(rgba(17, 17, 17, 0.84), rgba(17, 17, 17, 0.94)),
+                url("assets/dragomanov-a101.png") center/cover;
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.5;
+        }
+
+        .checkin-card {
+            width: min(100%, 560px);
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: rgba(32, 32, 32, 0.96);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+        }
+
+        .checkin-photo {
+            width: 100%;
+            height: 220px;
+            display: block;
+            object-fit: cover;
+            background: #151515;
+        }
+
+        .checkin-body {
+            display: grid;
+            gap: 14px;
+            padding: 24px;
+        }
+
+        .eyebrow {
+            margin: 0;
+            color: var(--yellow);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0;
+            text-transform: uppercase;
+        }
+
+        h1,
+        p {
+            margin: 0;
+        }
+
+        h1 {
+            color: var(--success);
+            font-size: clamp(34px, 7vw, 52px);
+            line-height: 1;
+        }
+
+        .status-error h1 {
+            color: var(--danger);
+        }
+
+        .room {
+            display: grid;
+            gap: 6px;
+            padding: 14px;
+            border: 1px solid rgba(244, 197, 66, 0.34);
+            border-radius: 8px;
+            background: #171717;
+        }
+
+        .room strong {
+            color: var(--yellow);
+            font-size: 22px;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .home-link {
+            min-height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: start;
+            padding: 0 16px;
+            border-radius: 8px;
+            background: var(--yellow);
+            color: #111111;
+            font-weight: 900;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="checkin-card">
+        <img class="checkin-photo" src="assets/dragomanov-a101.png" alt="Фото приміщення">
+        <section class="checkin-body" aria-live="polite">
+            <p class="eyebrow">Підтвердження входу</p>
+            <h1>Перевіряємо QR-код...</h1>
+            <p class="muted">Зачекайте кілька секунд.</p>
+        </section>
+    </main>
+
+    <script>
+        const body = document.querySelector(".checkin-body");
+        const photo = document.querySelector(".checkin-photo");
+        const token = new URLSearchParams(window.location.search).get("token");
+
+        function renderError(message) {
+            body.classList.add("status-error");
+            body.innerHTML = `
+                <p class="eyebrow">Підтвердження входу</p>
+                <h1>Вхід не підтверджено</h1>
+                <p class="muted">${message}</p>
+                <a class="home-link" href="/">На головну</a>
+            `;
+        }
+
+        function renderSuccess(data) {
+            const room = data.room || {};
+            const booking = data.booking || {};
+            const roomMeta = [room.floorLabel, room.roomNumber ? `каб. ${room.roomNumber}` : "", room.capacity ? `${room.capacity} місць` : ""]
+                .filter(Boolean)
+                .join(" · ");
+
+            if (room.photo) {
+                photo.src = room.photo;
+                photo.alt = `Фото ${room.name}`;
+            }
+
+            body.innerHTML = `
+                <p class="eyebrow">Підтвердження входу</p>
+                <h1>Ласкаво просимо!</h1>
+                <div class="room">
+                    <strong>${room.name || booking.room}</strong>
+                    <span>${roomMeta}</span>
+                    <span class="muted">${booking.title || "Бронювання"} · ${booking.date || ""} · ${booking.start || ""}-${booking.end || ""}</span>
+                </div>
+                <p class="muted">Вхід підтверджено. Можете проходити до потрібного приміщення.</p>
+                <a class="home-link" href="/">На головну</a>
+            `;
+        }
+
+        async function confirmCheckin() {
+            if (!token) {
+                renderError("У посиланні немає токена QR-коду.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/checkins/${encodeURIComponent(token)}`, { method: "POST" });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    renderError(data.message || "QR-код недійсний або бронювання не підтверджено.");
+                    return;
+                }
+
+                renderSuccess(data);
+            } catch (error) {
+                renderError("Не вдалося зв'язатися із сервером. Спробуйте ще раз.");
+            }
+        }
+
+        confirmCheckin();
+    </script>
+</body>
+</html>

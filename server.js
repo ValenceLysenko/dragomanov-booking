@@ -342,7 +342,8 @@ function normalizeBooking(booking) {
         approvedBy: booking.approvedBy || null,
         rejectedAt: booking.rejectedAt || null,
         rejectedBy: booking.rejectedBy || null,
-        cancelledAt: booking.cancelledAt || null
+        cancelledAt: booking.cancelledAt || null,
+        checkedInAt: booking.checkedInAt || null
     };
 }
 
@@ -424,6 +425,35 @@ function isAutoApprovedEventTitle(title) {
     return autoApprovedEventKeywords.some((keyword) => normalizedTitle.includes(normalizeEventTitle(keyword)));
 }
 
+function publicRoom(roomName) {
+    const room = rooms.find((item) => item.name === roomName);
+
+    if (!room) {
+        return null;
+    }
+
+    return {
+        name: room.name,
+        floorLabel: room.floorLabel,
+        roomNumber: room.roomNumber,
+        capacity: room.capacity,
+        photo: room.photo,
+        description: room.description
+    };
+}
+
+function publicCheckinBooking(booking) {
+    return {
+        room: booking.room,
+        title: booking.title,
+        date: booking.date,
+        start: booking.start,
+        end: booking.end,
+        status: booking.status,
+        checkedInAt: booking.checkedInAt || null
+    };
+}
+
 async function handleApi(req, res) {
     if (req.method === "OPTIONS") {
         res.writeHead(204, getJsonHeaders(req));
@@ -438,6 +468,39 @@ async function handleApi(req, res) {
 
     if (req.method === "GET" && req.url === "/api/rooms") {
         sendJson(req, res, 200, { rooms });
+        return;
+    }
+
+    const checkinMatch = req.url.match(/^\/api\/checkins\/([^/?]+)$/);
+    if (checkinMatch && req.method === "POST") {
+        const token = decodeURIComponent(checkinMatch[1]);
+        const bookings = readBookings();
+        const booking = bookings.find((item) => item.qrToken === token);
+
+        if (!booking) {
+            sendJson(req, res, 404, { message: "QR-код не знайдено." });
+            return;
+        }
+
+        if (booking.status !== "approved") {
+            sendJson(req, res, 403, {
+                message: "Це бронювання ще не підтверджено або вже скасовано.",
+                booking: publicCheckinBooking(booking),
+                room: publicRoom(booking.room)
+            });
+            return;
+        }
+
+        if (!booking.checkedInAt) {
+            booking.checkedInAt = new Date().toISOString();
+            writeBookings(bookings);
+        }
+
+        sendJson(req, res, 200, {
+            message: "Ласкаво просимо!",
+            booking: publicCheckinBooking(booking),
+            room: publicRoom(booking.room)
+        });
         return;
     }
 
@@ -819,7 +882,7 @@ async function handleApi(req, res) {
 }
 
 function serveStatic(req, res) {
-    const requestUrl = req.url === "/" ? "/Index.html" : req.url;
+    const requestUrl = req.url === "/" ? "/Index.html" : (req.url.startsWith("/checkin") ? "/Checkin.html" : req.url);
     const decodedUrl = decodeURIComponent(requestUrl.split("?")[0]);
     const filePath = path.normalize(path.join(ROOT, decodedUrl));
     const relativePath = path.relative(ROOT, filePath);
